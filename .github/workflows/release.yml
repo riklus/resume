@@ -20,12 +20,12 @@ jobs:
       - name: html to pdf
         uses: LukaszLapaj/html-to-pdf-action@master
         with:
-          htmlFile: ./example.html
-          outputFile: ./example.pdf
+          htmlFile: ./index.html
+          outputFile: ./resume.pdf
           pdfOptions: '{"format": "A4", "pageRanges": "1"}'
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: Example PDF
-          path: ./example.pdf
+          path: ./resume.pdf
