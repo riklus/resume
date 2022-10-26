@@ -11,7 +11,7 @@ jobs:
       - name: HTML to PDF (chrome)
         uses: fifsky/html-to-pdf-action@master
         with:
-          htmlFile: index.html
+          htmlFile: ./index.html
           outputFile: resume.pdf
           pdfOptions: '{"format": "A4", "pageRanges": "1"}'
       - name: Create Release
