@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: HTML to PDF (chrome)
-        uses: frnode/html-to-pdf-action@v1.0.1
+        uses: fifsky/html-to-pdf-action@master
         with:
           htmlFile: index.html
           outputFile: resume.pdf
