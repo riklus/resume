@@ -1,36 +1,31 @@
-on:
-  push:
-    branches:
-    - main
-  workflow_dispatch:
+name: Test Build Pdf
+
+on: [push, pull_request]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  html_to_pdf:
+    name: Generate PDF
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+
     steps:
-      - name: HTML to PDF (chrome)
-        uses: fifsky/html-to-pdf-action@master
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
-          htmlFile: ./index.html
-          outputFile: ./resume.pdf
+          fetch-depth: 1
+
+      - name: html to pdf
+        uses: LukaszLapaj/html-to-pdf-action@master
+        with:
+          htmlFile: ./example.html
+          outputFile: ./example.pdf
           pdfOptions: '{"format": "A4", "pageRanges": "1"}'
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./resume.pdf
-          asset_name: resume.pdf
-          asset_content_type: application/pdf
+          name: Example PDF
+          path: ./example.pdf
