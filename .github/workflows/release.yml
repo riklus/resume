@@ -1,0 +1,17 @@
+on:
+  push:
+    branches:
+    - main
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: HTML to PDF (chrome)
+        uses: frnode/html-to-pdf-action@v1.0.1
+        with:
+          htmlFile: index.html
+          outputFile: resume.pdf
+          pdfOptions: '{"format": "A4", "pageRanges": "1"}'
+
