@@ -1,15 +1,11 @@
-name: Test Build Pdf
+name: Build Pdf
 
 on: [push, pull_request]
 
 jobs:
   html_to_pdf:
     name: Generate PDF
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -29,3 +25,25 @@ jobs:
         with:
           name: Example PDF
           path: ./resume.pdf
+      
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref }}
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      
+      - name: upload pdf artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./resume.pdf
+          asset_name: resume.pdf
+          asset_content_type: application/pdf
